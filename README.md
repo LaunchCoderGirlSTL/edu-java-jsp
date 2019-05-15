@@ -16,7 +16,7 @@ the folder where you want your project to appear.
 
      `git clone git@github.com:yourusername/edu-java-jsp.git`
 
-6. Then launch Eclipse.
+6. Then launch IntelliJ.
 7. From the File menu, Import, then "Existing project into workspace".
 8. Navigate to your edu-java-jsp project folder and click Open.
 
@@ -34,7 +34,7 @@ the folder where you want your project to appear.
 
 `pom.xml` - maven configuration file that controls what library dependencies are included
 
-In addition, Eclipse shows a few extra icons like "Maven Dependencies" and "JRE System Library" that are
+In addition, IntelliJ shows a few extra icons like "External Libraries" that are
 placeholders for library jars.  You can actually spin these open with the triangle, and see what
 jars are included, and open those, and see what packages and classes are provided.  It's not usually 
 needed, but if you're curious where a provided class lives, the icons give you a graphical way to
@@ -45,18 +45,20 @@ view those.
 You will create servlets in `src/main/java/your.package.name/` and jsps in `src/main/webapps/*.jsp` (or
 optionally in folders within that).  
 
-You will start jetty running, 
+You will start tomcat
 
-    test/main/java/com.codeforanyone.edujavajsp/Start.java (right click, Run as Java Application)
+- open View -> Tool Windows -> Maven Projects
+-  spin the triangle to open 'edu-java-jsp', 'plugins', and 'tomcat7'
+- double-click `tomcat7:run-war`
 
 and then go to:
 
      http://localhost:8080/
 
-in a web browser of your choosing.  As you modify servlets and jsps, jetty will automatically
+in a web browser of your choosing.  As you modify servlets and jsps, tomcat will automatically
 pick up most changes, if you just reload the web page.  If it fails to pick up a change, you
-can stop and restart jetty to see your change.  (Do make sure your code is compiling first; if
-it's not recompiled, then jetty won't pick up the change.)
+can stop and restart tomcat to see your change.  (Do make sure your code is compiling first; if
+it's not recompiled, then tomcat won't pick up the change.)
 
 As you add new servlet urls, you may need to edit `web.xml` to match pretty urls with the
 servlet classes that support them.
@@ -66,7 +68,7 @@ database access, or represent data entities, or whatever.  You can create any pa
 and classes you want within `src/main/java/` and they will be included in the web app.
 
 You may also want to write unit tests; those go in `test/main/java/` instead.  Anything 
-in `test/` is not available from jetty (except Start.java that runs jetty itself).  The
+in `test/` is not available from tomcat.  The
 test folder is meant for unit tests that are only needed by the developer, not in a
 running web app.
 
@@ -113,18 +115,18 @@ Commit your existing work first.  The project name change will be its own step i
 
 Then there are a few steps.
 
-### 1. Eclipse Project Changes for Project Rename
+### 1. IntelliJ Project Changes for Project Rename
 
-First, we'll Close the project in Eclipse (right click the project, choose Close Project).  
-Eclipse would just get confused during this renaming process anyway.
+First, we'll Close the project in IntelliJ (right click the project, choose Close Project).  
+IntelliJ would just get confused during this renaming process anyway.
 
-Then, use a text editor to rename the project in the `.project` and the `pom.xml` files.
-The name appears twice or more in each file.
+Then, use a text editor to rename the project in the `pom.xml` file.
+The name appears twice or more in the file.
 
 Then go to the project directory using file system tools, and rename the directory to 
 your new project name (no spaces but dashes are okay).
 
-Now in Eclipse, use File, Import, Existing project into workspace, and choose your newly
+Now in IntelliJ, use File, New, project from existing sources, and choose your newly
 renamed directory.  If the project comes up with no errors, you're in good shape;
 otherwise, check the Markers or Problems tab and troubleshoot.  You probably missed a
 name somewhere.
@@ -159,7 +161,7 @@ pushes your latest changes plus all the history to the new repo.
 Go to your web browser, and refresh the github page, and you should be able to see the code now.
 
 At this point, you should be done.  You have your new project name, and you've abandoned
-the prior git repo with the old project name.  Both git and eclipse know about the new
+the prior git repo with the old project name.  Both git and intellij know about the new
 name, and you have a fresh git repo that has no relationship to the original fork except
 for some similar code.
 
@@ -263,37 +265,4 @@ for both. The Java class for the session cache is `javax.servlet.http.HttpSessio
 http request and response activities happening in your browser, including network transfer time, errors, css layout,
 javascript behaviors and errors, and lots of other developer-focused stuff.  You can google for these tools to
 learn how to use them to troubleshoot your web pages.  They go well above and beyond "view HTML source".
-
-# Misc Tech Notes
-
-Some people want to run this with Tomcat.  I recommend Tomcat 8 as best matching the
-servlet 3.0 API version that this example code is written for.
-
-Tomcat wants Java installed and configured in the JAVA_HOME environment 
-variable.  Mac OS X has a weird way of installing Java, so there's a 
-trick to finding the latest.  Put the following into your ~/.bash_profile 
-and then start a new terminal window:
-
-    export JAVA_HOME=$(/usr/libexec/java_home)
-
-Additionally (regardless of Windows or Mac), Tomcat's manager app GUI requires
-that you set up a username and password in a server config file, before you
-can use it.  (This is for security.)  See the tomcat docs for manager-gui role
-for details.
-
-You have the option in Eclipse to "Run on Server" and can choose an Apache Tomcat 8 server.
-This should "just work."
-
-To deploy to Tomcat on another machine, you'll need a war file.  Go to the pom.xml, right 
-click, Run As, Maven Build.  You don't have to give a Goal because there's a default
-goal of `clean` and `package` already set in the pom.xml.  Just tell it to Run.
-Then watch the console window; you should see this at the end:
-
-    [INFO] ------------------------------------------------------------------------
-    [INFO] BUILD SUCCESS
-    [INFO] ------------------------------------------------------------------------
-
-Also notice the `target/edu-java-jsp-0.0.1-SNAPSHOT.war` file produced.  You'll 
-probably want to give that a simpler name like `edujsp.war` before you deploy to 
-tomcat, because whatever you name the file will become the ContextPath in the url (minus `.war`).
 
